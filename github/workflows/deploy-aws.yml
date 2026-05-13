@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout del repositorio
+      - name: Clonar repositorio
         uses: actions/checkout@v4
 
       - name: Login a Docker Hub
@@ -24,7 +24,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/front:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/entrega_devops_2:latest
 
       - name: Desplegar en la EC2 (via ssh)
         uses: appleboy/ssh-action@v1.0.3
@@ -33,13 +33,12 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/front:latest
-
-            docker stop front || true
-            docker rm front || true
+            docker stop mi-proyecto || true
+            docker rm mi-proyecto || true
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/entrega_devops_2:latest
 
             docker run -d \
-              --name front \
-              -p 80:80 \
+              --name entrega_devops_2 \
+              -p 8080:8080 \
               --restart always \
-              ${{ secrets.DOCKERHUB_USERNAME }}/front:latest
+              ${{ secrets.DOCKERHUB_USERNAME }}/entrega_devops_2:latest
