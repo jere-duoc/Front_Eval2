@@ -33,3 +33,5 @@ EXPOSE 5000
 
 # Comando para iniciar la aplicación
 ENTRYPOINT ["python", "app.py"]
+
+
