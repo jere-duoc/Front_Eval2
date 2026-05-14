@@ -1,0 +1,31 @@
+FROM python:3.11-slim AS builder
+
+WORKDIR /workspace
+
+COPY requirements.txt .
+
+#User asegura que no se requiere usuario root.
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+#Paso 2. Py para correr Flask
+
+FROM python:3.11-slim
+
+# Crear usuario para permitir el minimo privilegio
+RUN useradd -m -r appuser
+USER appuser
+
+WORKDIR /app
+
+#Copiar el build con librerias
+COPY --from=build /root/.local /home/appuser/.local
+
+COPY . .
+
+#Encontrar librerias instaladas
+ENV PATH=/home/appuser/.local/bin:$PATH
+
+EXPOSE 5000
+
+ENTRYPOINT ["python", "app.py"]
+

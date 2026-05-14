@@ -1,0 +1,14 @@
+# Servicio para desplegar el frontend
+services:
+  frontend:
+    build: .
+    container_name: frontend-app
+    restart: on-failure
+    ports:
+      - "5001:5000"
+    # Variables de entorno requeridas
+    environment:
+      - PORT=5000
+      - DEBUG=True
+      - BACKEND_URL=http://localhost:3000
+      - SECRET_KEY=clave_secreta_estudiante_123
